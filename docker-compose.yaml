@@ -2,6 +2,7 @@ version: '3.8'
 
 volumes:
   payara:
+  postgres-data:
 
 services:
   payara:
@@ -25,6 +26,8 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: example
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - tdp-net
 
