@@ -12,7 +12,7 @@ services:
     environment:
         DOMAIN_NAME: domain1
     volumes:
-      - payara:/opt/payara/appserver/glassfish
+      - payara:/opt/payara
     ports:
       - 8080:8080
       - 4848:4848
