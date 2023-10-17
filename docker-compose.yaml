@@ -24,9 +24,13 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: example
+      POSTGRES_DB: tpd
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: run/secrets/password-secret
     networks:
       - tdp-net
+    secrets:
+      - password-secret
 
 
   adminer:
@@ -42,3 +46,9 @@ networks:
   tdp-net:
     name: tdp-net
     driver: bridge
+
+secrets:
+  username-secret:
+    file: ./secrets/username.txt
+  password-secret:
+    file: ./secrets/password.txt
