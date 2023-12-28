@@ -5,8 +5,13 @@
     <persistence-unit name="Postgres" transaction-type="JTA">
         <jta-data-source>jdbc/PostgresDS</jta-data-source>
         <class>ddg501.User</class>
+        <class>ddg501.Book</class>
+        <class>ddg501.UserBook</class>
+
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>

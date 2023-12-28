@@ -7,6 +7,9 @@ import jakarta.inject.Named;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @RequestScoped
 @Named
@@ -40,6 +43,15 @@ public class Authentication {
 
             dao.add(user);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User added successfully!"));
+
+            Book book = new Book("Razz","Alex", Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            BookDAORemote b1 = (BookDAORemote) ctx.lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/BookDAO!ddg501.BookDAO");
+            b1.add(book);
+
+            UserBookRemote b2 = (UserBookRemote) ctx.lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+
+            b2.borrowBook(user,book);
+
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Couldn't register user: " + e.getMessage()));
         }

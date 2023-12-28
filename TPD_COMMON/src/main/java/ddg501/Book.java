@@ -5,7 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -22,15 +25,29 @@ public class Book implements Serializable {
     private String author;
     @NotNull
     private Date publishDate;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_book",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
     public Book(){
 
     }
 
-    public Book(long id, String name, String author, Date publishDate) {
-        this.id = id;
+    public Book(String name, String author, Date publishDate) {
         this.name = name;
         this.author = author;
         this.publishDate = publishDate;
+    }
+
+    public void addUser(User user) {
+        this.users.add(user);
+    }
+
+    public void removeUser(User user) {
+        this.users.remove(user);
     }
 
     public long getId() {
