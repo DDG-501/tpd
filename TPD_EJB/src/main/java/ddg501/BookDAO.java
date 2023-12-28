@@ -4,8 +4,16 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 import java.util.List;
+import java.util.Set;
 
 public class BookDAO implements BookDAORemote {
 
@@ -17,9 +25,13 @@ public class BookDAO implements BookDAORemote {
     }
     @Override
     public List<Book> getAll() {
-        String jpql = "SELECT e FROM Book e";
-        TypedQuery<Book> query = entityManager.createQuery(jpql, Book.class);
-        return query.getResultList();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Book> criteriaQuery = criteriaBuilder.createQuery(Book.class);
+
+        Root<Book> root = criteriaQuery.from(Book.class);
+        criteriaQuery.select(root);
+
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
     @Override
@@ -28,56 +40,35 @@ public class BookDAO implements BookDAORemote {
     }
 
     @Override
-    public void add(Book book) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+    public void add(Book book) throws IllegalArgumentException{
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<Book>> violations = validator.validate(book);
+
+            if (!violations.isEmpty()) {
+                throw new IllegalArgumentException(violations.toString());
+            }
 
             entityManager.persist(book);
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
         }
     }
 
     @Override
-    public void update(Book book) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+    public void update(Book book) throws IllegalArgumentException{
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<Book>> violations = validator.validate(book);
+
+            if (!violations.isEmpty()) {
+                throw new IllegalArgumentException(violations.toString());
+            }
 
             entityManager.merge(book);
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
         }
     }
 
     @Override
     public void delete(Book book) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-
-            entityManager.remove(entityManager.contains(book) ? book : entityManager.merge(book));
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
+        entityManager.remove(book);
     }
 }

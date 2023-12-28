@@ -3,19 +3,40 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-<h:head>
-    <title>Hello World</title>
-</h:head>
-<h:body>
-    <h:form>
-        Username: <h:inputText value="#{authentication.username}"/> <br/>
-        Password: <h:inputText value="#{authentication.password}"/> <br/>
 
-        <h:commandButton value="Register" actionListener="#{authentication.register()}" />
-        <br/>
-        <h:outputText value="#{authentication.status}"/>
+<h:head>
+    <title>Authenticate</title>
+    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+    <h:outputScript library="primefaces" name="jquery/jquery.js" />
+</h:head>
+
+<h:body class="bg-gray-100 h-screen flex flex-col items-center justify-center">
+
+    <h:form class="bg-white p-8 rounded shadow-md">
+        <div class="mb-4">
+            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+            <h:inputText id="username"
+                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                         value="#{authentication.username}"/>
+        </div>
+
+        <div class="mb-4">
+            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+            <h:inputText id="password"
+                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                         value="#{authentication.password}"/>
+        </div>
+
+        <h:commandButton class="bg-blue-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                         value="Register" actionListener="#{authentication.register()}"/>
     </h:form>
+
+    <div class="mt-4">
+        <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+    </div>
 </h:body>
+
 </html>

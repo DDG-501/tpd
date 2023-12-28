@@ -1,6 +1,8 @@
 package ddg501;
 
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 
 import javax.naming.InitialContext;
@@ -11,16 +13,6 @@ import javax.naming.NamingException;
 public class Authentication {
     private String username;
     private String password;
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    private String status;
 
     public String getUsername() {
         return username;
@@ -39,7 +31,6 @@ public class Authentication {
     }
 
     public void register() {
-        status="Failed";
         try {
             InitialContext ctx = new InitialContext();
 
@@ -48,9 +39,9 @@ public class Authentication {
             User user = new User(username, password);
 
             dao.add(user);
-            status="Success";
-        } catch (NamingException e) {
-            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User added successfully!"));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Couldn't register user: " + e.getMessage()));
         }
     }
 }

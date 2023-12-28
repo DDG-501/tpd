@@ -1,20 +1,26 @@
 package ddg501;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "book")
+@Table(name = "books")
 public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull
+    @Size(min=4,max=50)
     private String name;
-
+    @NotNull
+    @Size(max=50)
     private String author;
+    @NotNull
     private Date publishDate;
     public Book(){
 

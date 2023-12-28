@@ -6,6 +6,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -13,6 +16,7 @@ import jakarta.validation.ValidatorFactory;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
@@ -25,41 +29,47 @@ public class UserDAO implements UserDAORemote {
     }
 
     public List<User> getAll() {
-        String jpql = "SELECT e FROM User e";
-        TypedQuery<User> query = entityManager.createQuery(jpql, User.class);
-        return query.getResultList();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+
+        Root<User> root = criteriaQuery.from(User.class);
+        criteriaQuery.select(root);
+
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    public User get(String username, String password) {
-        String jpql = "SELECT e FROM User e WHERE e.username = :username AND e.password = :password";
-        TypedQuery<User> query = entityManager.createQuery(jpql, User.class);
-        query.setParameter("username", username);
-        query.setParameter("password", password);
-
-        List<User> resultList = query.getResultList();
-        return resultList.isEmpty() ? null : resultList.get(0);
+    public User get(long id) {
+        return entityManager.find(User.class, id);
     }
 
-    public void add(User user) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        System.out.println(violations);
+    public void add(User user) throws IllegalArgumentException{
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<User>> violations = validator.validate(user);
 
-        if (!violations.isEmpty()) {
-            throw new IllegalArgumentException("Validation failed for user: " + violations);
-        }
+            if (!violations.isEmpty()) {
+                String violationMessages = violations.stream()
+                        .map(violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
+                        .collect(Collectors.joining(", "));
 
-        try {
+                throw new IllegalArgumentException(violationMessages);
+            }
+
             entityManager.persist(user);
-            entityManager.flush();
-        } catch (Exception e) {
-            throw new RuntimeException("Error while adding user", e);
         }
     }
 
-    public void update(User user) {
-        entityManager.merge(user);
+    public void update(User user) throws IllegalArgumentException{
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<User>> violations = validator.validate(user);
+
+            if (!violations.isEmpty()) {
+                throw new IllegalArgumentException(violations.toString());
+            }
+
+            entityManager.merge(user);
+        }
     }
 
     public void delete(User user) {

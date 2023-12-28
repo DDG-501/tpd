@@ -17,6 +17,8 @@ public class User implements Serializable {
     @NotNull
     @Size(min = 4, max = 50)
     private String username;
+    @NotNull
+    @Size(min=8, max=50)
     private String password;
 
     public User() {
