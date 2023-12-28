@@ -10,4 +10,5 @@ public interface UserDAORemote {
     void add(User user);
     void  update(User user);
     void  delete(User user);
+    User login(String username, String password);
 }

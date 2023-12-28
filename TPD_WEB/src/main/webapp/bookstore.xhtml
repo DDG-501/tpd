@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Bookstore</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"></link>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI/tZ1T9v9v5sDunP8A3tK5UuRLeEz1lkgE2r+9M=" crossorigin="anonymous"></script>
+</h:head>
+
+<h:body class="bg-gray-100 p-8">
+    <h:form class="max-w-screen-md mx-auto">
+        <div class="bg-white shadow-md rounded my-6 overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                <tr>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Author</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ui:repeat value="#{bookstore.books}" var="book">
+                    <tr class="bg-white">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{book.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{book.author}</td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+            </table>
+        </div>
+    </h:form>
+</h:body>
+
+</html>

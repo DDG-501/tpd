@@ -8,6 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -74,5 +75,26 @@ public class UserDAO implements UserDAORemote {
 
     public void delete(User user) {
         entityManager.remove(user);
+    }
+
+    @Override
+    public User login(String username, String password) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+
+        Root<User> root = criteriaQuery.from(User.class);
+        criteriaQuery.select(root);
+
+        Predicate usernamePredicate = criteriaBuilder.equal(root.get("username"), username);
+        Predicate passwordPredicate = criteriaBuilder.equal(root.get("password"), password);
+        criteriaQuery.where(criteriaBuilder.and(usernamePredicate, passwordPredicate));
+
+        List<User> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+
+        if (!resultList.isEmpty()) {
+            return resultList.get(0);
+        } else {
+            return null;
+        }
     }
 }

@@ -1,5 +1,7 @@
 package ddg501;
 
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
@@ -15,6 +17,8 @@ import jakarta.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Set;
 
+@Stateless
+@LocalBean
 public class BookDAO implements BookDAORemote {
 
     @PersistenceContext(unitName = "Postgres")

@@ -10,7 +10,7 @@
 <h:head>
     <title>Authenticate</title>
     <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
-    <h:outputScript library="primefaces" name="jquery/jquery.js" />
+    <h:outputScript library="primefaces" name="jquery/jquery.js"/>
 </h:head>
 
 <h:body class="bg-gray-100 h-screen flex flex-col items-center justify-center">
@@ -30,8 +30,13 @@
                          value="#{authentication.password}"/>
         </div>
 
-        <h:commandButton class="bg-blue-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                         value="Register" actionListener="#{authentication.register()}"/>
+        <div class="flex justify-center">
+            <h:commandButton class="bg-blue-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                             value="Register" actionListener="#{authentication.register()}"/>
+
+            <h:commandButton class="bg-blue-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                             value="Login" actionListener="#{authentication.login()}"/>
+        </div>
     </h:form>
 
     <div class="mt-4">
