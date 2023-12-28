@@ -3,16 +3,23 @@ package ddg501;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 @LocalBean
 public class UserDAO implements UserDAORemote {
     @PersistenceContext(unitName = "Postgres")
     private EntityManager entityManager;
+
 
     public UserDAO() {
     }
@@ -34,8 +41,21 @@ public class UserDAO implements UserDAORemote {
     }
 
     public void add(User user) {
-        entityManager.persist(user);
-        entityManager.flush();
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        System.out.println(violations);
+
+        if (!violations.isEmpty()) {
+            throw new IllegalArgumentException("Validation failed for user: " + violations);
+        }
+
+        try {
+            entityManager.persist(user);
+            entityManager.flush();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while adding user", e);
+        }
     }
 
     public void update(User user) {
