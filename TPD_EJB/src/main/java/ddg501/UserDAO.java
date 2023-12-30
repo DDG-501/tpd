@@ -15,6 +15,9 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,7 +27,6 @@ import java.util.stream.Collectors;
 public class UserDAO implements UserDAORemote {
     @PersistenceContext(unitName = "Postgres")
     private EntityManager entityManager;
-
 
     public UserDAO() {
     }
@@ -96,5 +98,30 @@ public class UserDAO implements UserDAORemote {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void borrowBook(User user, Book book) {
+        UserBook userBook = new UserBook();
+        userBook.setUser(user);
+        userBook.setBook(book);
+        userBook.setBorrowDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        entityManager.persist(userBook);
+    }
+
+    @Override
+    public void returnBook(User user, Book book) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserBook> criteriaQuery = criteriaBuilder.createQuery(UserBook.class);
+
+        Root<UserBook> root = criteriaQuery.from(UserBook.class);
+        criteriaQuery.select(root);
+
+        Predicate userIdPredicate = criteriaBuilder.equal(root.get("user_id"), user.getId());
+        Predicate bookIdPredicate = criteriaBuilder.equal(root.get("book_id"), book.getId());
+        criteriaQuery.where(criteriaBuilder.and(userIdPredicate, bookIdPredicate));
+
+        List<UserBook> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+        resultList.stream().filter(v -> v.getReturnDate() == null).forEach(v -> v.setReturnDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())));
     }
 }

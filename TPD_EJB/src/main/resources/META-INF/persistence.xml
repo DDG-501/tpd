@@ -6,6 +6,7 @@
         <jta-data-source>jdbc/PostgresDS</jta-data-source>
         <class>ddg501.User</class>
         <class>ddg501.Book</class>
+        <class>ddg501.UserBook</class>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

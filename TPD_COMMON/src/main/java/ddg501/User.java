@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -21,9 +23,11 @@ public class User implements Serializable {
     @Size(min=8, max=50)
     private String password;
 
+    @ManyToMany(mappedBy = "users")
+    private Set<Book> books = new HashSet<>();
+
     public User() {
     }
-
     public User(String username, String password) {
         this.username = username;
         this.password = password;
@@ -33,6 +37,10 @@ public class User implements Serializable {
         this.id = id;
         this.username = username;
         this.password = password;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
     }
 
     public long getId() {
