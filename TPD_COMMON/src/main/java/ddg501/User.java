@@ -23,8 +23,12 @@ public class User implements Serializable {
     @Size(min=8, max=50)
     private String password;
 
-    @ManyToMany(mappedBy = "users")
-    private Set<Book> books = new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private Set<UserBook> borrows = new HashSet<>();
+
+    public Set<UserBook> getBorrows() {
+        return borrows;
+    }
 
     public User() {
     }
@@ -37,10 +41,6 @@ public class User implements Serializable {
         this.id = id;
         this.username = username;
         this.password = password;
-    }
-
-    public Set<Book> getBooks() {
-        return books;
     }
 
     public long getId() {

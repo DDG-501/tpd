@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @RequestScoped
 @Named
@@ -20,28 +21,22 @@ public class Bookstore implements Serializable {
     @Inject
     private Authentication authentication;
 
-    List<Book> books;
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
-
     @PostConstruct
     public void init() {
+
+    }
+
+    public List<Book> getBooks() {
         try {
             InitialContext ctx = new InitialContext();
 
             BookDAORemote dao = (BookDAORemote) ctx
                     .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/BookDAO!ddg501.BookDAO");
-
-            books = dao.getAll();
+            return dao.getAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void borrowBook(Book book) {
@@ -60,14 +55,14 @@ public class Bookstore implements Serializable {
         }
     }
 
-    public void returnBook(Book book) {
+    public void returnBook(UserBook userBook) {
         try {
             InitialContext ctx = new InitialContext();
 
             UserDAORemote dao = (UserDAORemote) ctx
                     .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
-            dao.returnBook(authentication.getUser(), book);
+            dao.returnBook(userBook);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Book returned successfully!"));
         } catch (Exception e) {

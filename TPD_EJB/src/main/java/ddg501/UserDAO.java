@@ -114,19 +114,8 @@ public class UserDAO implements UserDAORemote {
     }
 
     @Override
-    public void returnBook(User user, Book book) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<UserBook> criteriaQuery = criteriaBuilder.createQuery(UserBook.class);
-
-        Root<UserBook> root = criteriaQuery.from(UserBook.class);
-        criteriaQuery.select(root);
-
-        Predicate userIdPredicate = criteriaBuilder.equal(root.get("user"), user);
-        Predicate bookIdPredicate = criteriaBuilder.equal(root.get("book"), book);
-        criteriaQuery.where(criteriaBuilder.and(userIdPredicate, bookIdPredicate));
-
-        List<UserBook> resultList = entityManager.createQuery(criteriaQuery).getResultList();
-        resultList.stream().filter(v -> v.getReturnDate() == null).forEach(
-                v -> v.setReturnDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())));
+    public void returnBook(UserBook borrow) {
+        borrow.setReturnDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        entityManager.merge(borrow);
     }
 }

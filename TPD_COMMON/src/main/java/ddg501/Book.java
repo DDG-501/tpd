@@ -45,9 +45,13 @@ public class Book implements Serializable {
         this.imageURL = imageURL;
     }
 
-    @ManyToMany
-    @JoinTable(name = "user_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "book")
+    private Set<UserBook> borrows = new HashSet<>();
+
+    public Set<UserBook> getBorrows() {
+        return borrows;
+    }
+
 
     public Book() {
 
@@ -59,9 +63,6 @@ public class Book implements Serializable {
         this.publishDate = publishDate;
     }
 
-    public Set<User> getUsers() {
-        return users;
-    }
 
     public long getId() {
         return id;
