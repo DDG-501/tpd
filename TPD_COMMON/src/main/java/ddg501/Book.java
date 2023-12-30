@@ -18,21 +18,38 @@ public class Book implements Serializable {
     private long id;
 
     @NotNull
-    @Size(min=4,max=50)
+    @Size(min = 4, max = 50)
     private String name;
     @NotNull
-    @Size(max=50)
+    @Size(max = 50)
     private String author;
     @NotNull
     private Date publishDate;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private String imageURL;
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
 
     @ManyToMany
-    @JoinTable(
-            name = "user_book",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "user_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
-    public Book(){
+
+    public Book() {
 
     }
 
@@ -45,6 +62,7 @@ public class Book implements Serializable {
     public Set<User> getUsers() {
         return users;
     }
+
     public long getId() {
         return id;
     }

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Add New Book</title>
+        <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+        <h:outputScript library="primefaces" name="jquery/jquery.js"/>
+    </h:head>
+
+    <h:body class="bg-gray-100">
+        <div class="container mx-auto my-8">
+            <h:form id="addBookForm" class="bg-white p-6 rounded shadow-md">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-4">
+                        <h:outputLabel for="name" value="Book Name:" class="block text-gray-700 font-bold mb-2" />
+                        <h:inputText id="name" value="#{bookBean.book.name}" required="true"
+                                     class="w-full border rounded py-2 px-3" />
+                    </div>
+
+                    <div class="mb-4">
+                        <h:outputLabel for="author" value="Author:" class="block text-gray-700 font-bold mb-2" />
+                        <h:inputText id="author" value="#{bookBean.book.author}" required="true"
+                                     class="w-full border rounded py-2 px-3" />
+                    </div>
+
+                    <div class="mb-4">
+                        <h:outputLabel for="publishDate" value="Publish Date:" class="block text-gray-700 font-bold mb-2" />
+                        <h:inputText id="publishDate" value="#{bookBean.book.publishDate}" required="true"
+                                     class="w-full border rounded py-2 px-3" type="date" pattern="yyyy-MM-dd">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:inputText>
+                    </div>
+
+                    <div class="mb-4">
+                        <h:outputLabel for="description" value="Description:" class="block text-gray-700 font-bold mb-2" />
+                        <h:inputTextarea id="description" value="#{bookBean.book.description}"
+                                         class="w-full border rounded py-2 px-3" rows="4" />
+                    </div>
+
+                    <div class="mb-4">
+                        <h:outputLabel for="imageURL" value="Image URL:" class="block text-gray-700 font-bold mb-2" />
+                        <h:inputText id="imageURL" value="#{bookBean.book.imageURL}"
+                                     class="w-full border rounded py-2 px-3" />
+                    </div>
+
+                    <div class="col-span-2">
+                        <h:commandButton value="Add Book" action="#{bookBean.addBook}"
+                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" />
+                    </div>
+                </div>
+            </h:form>
+        </div>
+
+        <div class="mt-4">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+        </div>
+    </h:body>
+</html>
+

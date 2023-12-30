@@ -45,7 +45,7 @@ public class UserDAO implements UserDAORemote {
         return entityManager.find(User.class, id);
     }
 
-    public void add(User user) throws IllegalArgumentException{
+    public void add(User user) throws IllegalArgumentException {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             Validator validator = factory.getValidator();
             Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -62,13 +62,17 @@ public class UserDAO implements UserDAORemote {
         }
     }
 
-    public void update(User user) throws IllegalArgumentException{
+    public void update(User user) throws IllegalArgumentException {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             Validator validator = factory.getValidator();
             Set<ConstraintViolation<User>> violations = validator.validate(user);
 
             if (!violations.isEmpty()) {
-                throw new IllegalArgumentException(violations.toString());
+                String violationMessages = violations.stream()
+                        .map(violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
+                        .collect(Collectors.joining(", "));
+
+                throw new IllegalArgumentException(violationMessages);
             }
 
             entityManager.merge(user);
@@ -117,11 +121,12 @@ public class UserDAO implements UserDAORemote {
         Root<UserBook> root = criteriaQuery.from(UserBook.class);
         criteriaQuery.select(root);
 
-        Predicate userIdPredicate = criteriaBuilder.equal(root.get("user_id"), user.getId());
-        Predicate bookIdPredicate = criteriaBuilder.equal(root.get("book_id"), book.getId());
+        Predicate userIdPredicate = criteriaBuilder.equal(root.get("user"), user);
+        Predicate bookIdPredicate = criteriaBuilder.equal(root.get("book"), book);
         criteriaQuery.where(criteriaBuilder.and(userIdPredicate, bookIdPredicate));
 
         List<UserBook> resultList = entityManager.createQuery(criteriaQuery).getResultList();
-        resultList.stream().filter(v -> v.getReturnDate() == null).forEach(v -> v.setReturnDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())));
+        resultList.stream().filter(v -> v.getReturnDate() == null).forEach(
+                v -> v.setReturnDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())));
     }
 }

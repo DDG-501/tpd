@@ -1,36 +1,80 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-    <title>Bookstore</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"></link>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI/tZ1T9v9v5sDunP8A3tK5UuRLeEz1lkgE2r+9M=" crossorigin="anonymous"></script>
+    <title>Book List</title>
+    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+    <h:outputScript library="primefaces" name="jquery/jquery.js" />
+
+    <style>
+    .book-card {
+        position: relative;
+        width: 200px; 
+        height: 300px; 
+        transition: box-shadow 0.3s ease;
+        overflow: hidden;
+        aspect-ratio: 1.33; 
+    }
+
+    .book-cover {
+        width: 100%;
+        height: 0;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .card-details {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    .book-card:hover .card-details {
+        transform: translateY(0);
+    }
+    </style>
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{loginGuard.checkAccess}" />
+    </f:metadata>
 </h:head>
 
-<h:body class="bg-gray-100 p-8">
-    <h:form class="max-w-screen-md mx-auto">
-        <div class="bg-white shadow-md rounded my-6 overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                <tr>
-                    <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                    <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Author</th>
-                </tr>
-                </thead>
-                <tbody>
-                <ui:repeat value="#{bookstore.books}" var="book">
-                    <tr class="bg-white">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{book.name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{book.author}</td>
-                    </tr>
-                </ui:repeat>
-                </tbody>
-            </table>
+<h:body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold mb-4">Book List</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <ui:repeat var="book" value="#{bookstore.books}">
+            <div class="relative max-w-xs book-card">
+                <div class="bg-cover bg-center h-32 md:h-48 lg:h-64 rounded-md" style="background-image: url('#{book.imageURL}')">
+                    <div class="card-details">
+                        <h2 class="text-xl font-bold mb-2">#{book.name}</h2>
+                        <p class="text-gray-600 mb-2">Author: #{book.author}</p>
+                        <p class="text-gray-600 mb-2">Publish Date: #{bookstore.formatDate(book.publishDate)}</p>
+                        <h:form style="text-align: center; padding: 16px;">
+                        <h:commandButton 
+                                value="Borrow Book" 
+                                action="#{bookstore.borrowBook(book)}" 
+                                styleClass="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800" />
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </ui:repeat>
         </div>
-    </h:form>
+    </div>
+        <div class="mt-4">
+        <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" position="bottom" />
+    </div>
 </h:body>
-
 </html>
+

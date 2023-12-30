@@ -1,11 +1,13 @@
 package ddg501;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -13,9 +15,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-
-import java.util.List;
-import java.util.Set;
 
 @Stateless
 @LocalBean
@@ -27,6 +26,7 @@ public class BookDAO implements BookDAORemote {
     public BookDAO() {
 
     }
+
     @Override
     public List<Book> getAll() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -44,13 +44,17 @@ public class BookDAO implements BookDAORemote {
     }
 
     @Override
-    public void add(Book book) throws IllegalArgumentException{
+    public void add(Book book) throws IllegalArgumentException {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             Validator validator = factory.getValidator();
             Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
             if (!violations.isEmpty()) {
-                throw new IllegalArgumentException(violations.toString());
+                String violationMessages = violations.stream()
+                        .map(violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
+                        .collect(Collectors.joining(", "));
+
+                throw new IllegalArgumentException(violationMessages);
             }
 
             entityManager.persist(book);
@@ -58,13 +62,17 @@ public class BookDAO implements BookDAORemote {
     }
 
     @Override
-    public void update(Book book) throws IllegalArgumentException{
+    public void update(Book book) throws IllegalArgumentException {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             Validator validator = factory.getValidator();
             Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
             if (!violations.isEmpty()) {
-                throw new IllegalArgumentException(violations.toString());
+                String violationMessages = violations.stream()
+                        .map(violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
+                        .collect(Collectors.joining(", "));
+
+                throw new IllegalArgumentException(violationMessages);
             }
 
             entityManager.merge(book);

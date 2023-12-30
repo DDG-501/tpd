@@ -1,6 +1,5 @@
 package ddg501;
 
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.application.NavigationHandler;
@@ -8,11 +7,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 @SessionScoped
 @Named
@@ -45,14 +40,17 @@ public class Authentication implements Serializable {
         try {
             InitialContext ctx = new InitialContext();
 
-            UserDAORemote dao = (UserDAORemote) ctx.lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+            UserDAORemote dao = (UserDAORemote) ctx
+                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
             User user = new User(username, password);
 
             dao.add(user);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User added successfully!"));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User added successfully!"));
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Couldn't register user: " + e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                    "Couldn't register user: " + e.getMessage()));
         }
     }
 
@@ -60,19 +58,23 @@ public class Authentication implements Serializable {
         try {
             InitialContext ctx = new InitialContext();
 
-            UserDAORemote dao = (UserDAORemote) ctx.lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+            UserDAORemote dao = (UserDAORemote) ctx
+                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
             user = dao.login(username, password);
             if (user != null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User logged in!"));
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User logged in!"));
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
                 navigationHandler.handleNavigation(facesContext, null, "bookstore.xhtml?faces-redirect=true");
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Incorrect credentials"));
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Incorrect credentials"));
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Couldn't register user: " + e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                    "Couldn't register user: " + e.getMessage()));
         }
     }
 }
