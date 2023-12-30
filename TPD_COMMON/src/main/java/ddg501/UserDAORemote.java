@@ -12,4 +12,5 @@ public interface UserDAORemote {
     void  delete(User user);
     void borrowBook(User user, Book book);
     void returnBook(User user, Book book);
+    User login(String username, String password);
 }

@@ -17,7 +17,6 @@ import jakarta.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Set;
 
-
 @Stateless
 @LocalBean
 public class BookDAO implements BookDAORemote {

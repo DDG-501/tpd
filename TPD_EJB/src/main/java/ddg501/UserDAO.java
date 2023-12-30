@@ -80,6 +80,27 @@ public class UserDAO implements UserDAORemote {
     }
 
     @Override
+    public User login(String username, String password) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+
+        Root<User> root = criteriaQuery.from(User.class);
+        criteriaQuery.select(root);
+
+        Predicate usernamePredicate = criteriaBuilder.equal(root.get("username"), username);
+        Predicate passwordPredicate = criteriaBuilder.equal(root.get("password"), password);
+        criteriaQuery.where(criteriaBuilder.and(usernamePredicate, passwordPredicate));
+
+        List<User> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+
+        if (!resultList.isEmpty()) {
+            return resultList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public void borrowBook(User user, Book book) {
         UserBook userBook = new UserBook();
         userBook.setUser(user);
