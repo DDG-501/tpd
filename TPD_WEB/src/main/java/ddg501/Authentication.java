@@ -7,6 +7,9 @@ import jakarta.inject.Named;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @RequestScoped
 @Named
@@ -40,6 +43,7 @@ public class Authentication {
 
             dao.add(user);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User added successfully!"));
+
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Couldn't register user: " + e.getMessage()));
         }
