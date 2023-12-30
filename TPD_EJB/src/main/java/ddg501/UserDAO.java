@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
-public class UserDAO implements UserDAORemote, UserBookRemote {
+public class UserDAO implements UserDAORemote {
     @PersistenceContext(unitName = "Postgres")
     private EntityManager entityManager;
 
