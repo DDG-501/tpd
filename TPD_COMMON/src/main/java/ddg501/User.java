@@ -28,17 +28,6 @@ public class User implements Serializable {
 
     public User() {
     }
-
-    public void addBook(Book book) {
-        this.books.add(book);
-        book.addUser(this);
-    }
-
-    public void removeBook(Book book) {
-        this.books.remove(book);
-        book.removeUser(this);
-    }
-
     public User(String username, String password) {
         this.username = username;
         this.password = password;
@@ -48,6 +37,10 @@ public class User implements Serializable {
         this.id = id;
         this.username = username;
         this.password = password;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
     }
 
     public long getId() {

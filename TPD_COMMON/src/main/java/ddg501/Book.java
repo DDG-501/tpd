@@ -42,6 +42,10 @@ public class Book implements Serializable {
         this.publishDate = publishDate;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
+
     public void addUser(User user) {
         this.users.add(user);
     }
