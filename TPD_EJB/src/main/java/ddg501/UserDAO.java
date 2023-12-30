@@ -8,6 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -89,6 +90,17 @@ public class UserDAO implements UserDAORemote {
 
     @Override
     public void returnBook(User user, Book book) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserBook> criteriaQuery = criteriaBuilder.createQuery(UserBook.class);
 
+        Root<UserBook> root = criteriaQuery.from(UserBook.class);
+        criteriaQuery.select(root);
+
+        Predicate userIdPredicate = criteriaBuilder.equal(root.get("user_id"), user.getId());
+        Predicate bookIdPredicate = criteriaBuilder.equal(root.get("book_id"), book.getId());
+        criteriaQuery.where(criteriaBuilder.and(userIdPredicate, bookIdPredicate));
+
+        List<UserBook> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+        resultList.stream().filter(v -> v.getReturnDate() == null).forEach(v -> v.setReturnDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())));
     }
 }

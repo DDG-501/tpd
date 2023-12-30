@@ -20,8 +20,20 @@ public class UserBook {
     private Book book;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "date")
+    @Column(name = "borrow_date")
     private Date borrowDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "return_date")
+    private Date returnDate;
+
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
 
     public Long getId() {
         return id;
