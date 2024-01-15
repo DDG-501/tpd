@@ -36,6 +36,25 @@ public class Authentication implements Serializable {
         this.password = password;
     }
 
+    public void refreshUser() {
+        try {
+            InitialContext ctx = new InitialContext();
+
+            UserDAORemote dao = (UserDAORemote) ctx
+                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+
+            this.user = dao.get(user.getId());
+
+            if (user == null) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Can't refresh user"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                    "Couldn't refresh user: " + e.getMessage()));
+        }
+    }
+
     public void register() {
         try {
             InitialContext ctx = new InitialContext();
@@ -62,6 +81,9 @@ public class Authentication implements Serializable {
                     .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
             user = dao.login(username, password);
+            username = "";
+            password = "";
+
             if (user != null) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User logged in!"));
@@ -76,5 +98,12 @@ public class Authentication implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
                     "Couldn't register user: " + e.getMessage()));
         }
+    }
+
+    public void logout() {
+        user = null;
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
+        navigationHandler.handleNavigation(facesContext, null, "index.xhtml?faces-redirect=true");
     }
 }

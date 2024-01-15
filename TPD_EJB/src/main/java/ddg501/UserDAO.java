@@ -3,9 +3,7 @@ package ddg501;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -42,7 +40,11 @@ public class UserDAO implements UserDAORemote {
     }
 
     public User get(long id) {
-        return entityManager.find(User.class, id);
+        User user = entityManager.find(User.class, id);
+
+        entityManager.refresh(user);
+
+        return user;
     }
 
     public void add(User user) throws IllegalArgumentException {

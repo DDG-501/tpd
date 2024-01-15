@@ -5,13 +5,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "books")
+@Table(name = "books", schema = "public")
 public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,12 +18,18 @@ public class Book implements Serializable {
 
     @NotNull
     @Size(min = 4, max = 50)
+    @Column(length = 50)
     private String name;
+
     @NotNull
+    @Column(length = 50)
     @Size(max = 50)
     private String author;
     @NotNull
     private Date publishDate;
+
+    @Column(length = 2000)
+    @Size(min = 4, max = 2000)
     private String description;
 
     public String getDescription() {
@@ -52,7 +57,6 @@ public class Book implements Serializable {
         return borrows;
     }
 
-
     public Book() {
 
     }
@@ -62,7 +66,6 @@ public class Book implements Serializable {
         this.author = author;
         this.publishDate = publishDate;
     }
-
 
     public long getId() {
         return id;

@@ -1,7 +1,6 @@
 package ddg501;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -10,20 +9,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "public")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotNull
+    @Column(unique = true, length = 50)
     @Size(min = 4, max = 50)
     private String username;
+
     @NotNull
-    @Size(min=8, max=50)
+    @Column(length = 50)
+    @Size(min = 8, max = 50)
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<UserBook> borrows = new HashSet<>();
 
     public Set<UserBook> getBorrows() {
@@ -32,6 +34,7 @@ public class User implements Serializable {
 
     public User() {
     }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;

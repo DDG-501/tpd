@@ -2,7 +2,6 @@ package ddg501;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
@@ -13,7 +12,6 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @RequestScoped
 @Named
@@ -82,7 +80,7 @@ public class Bookstore implements Serializable {
     }
 
     public String limitDescription(String description) {
-        int maxLength = 100; // Set your desired maximum length
+        int maxLength = 100;
         if (description != null && description.length() > maxLength) {
             return description.substring(0, maxLength) + "...";
         } else {

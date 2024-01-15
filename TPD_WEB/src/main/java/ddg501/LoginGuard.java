@@ -18,6 +18,8 @@ public class LoginGuard {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
             navigationHandler.handleNavigation(facesContext, null, "index.xhtml?faces-redirect=true");
+        } else {
+            authentication.refreshUser();
         }
     }
 }

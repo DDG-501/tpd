@@ -14,34 +14,31 @@
 </h:head>
 
 <h:body class="bg-gray-100 h-screen flex flex-col items-center justify-center">
-
-    <h:form class="bg-white p-8 rounded shadow-md">
-        <div class="mb-4">
+    <h:form class="bg-white p-8 rounded shadow-md flex flex-col space-y-3">
+        <img class="w-12 h-12 place-self-center" src="resources/Logo.png" alt="Logo"/>
+        <div class="mb-6">
             <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
             <h:inputText id="username"
-                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                         class="shadow appearance-none border rounded w-full p-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                          value="#{authentication.username}"/>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-6">
             <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
             <h:inputText id="password"
-                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                         type="password"
+                         class="shadow appearance-none border rounded w-full p-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                          value="#{authentication.password}"/>
         </div>
 
-        <div class="flex justify-center">
-            <h:commandButton class="bg-blue-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                             value="Register" actionListener="#{authentication.register()}"/>
+        <h:commandButton class="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+                         value="Login" actionListener="#{authentication.login()}"/>
 
-            <h:commandButton class="bg-blue-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                             value="Login" actionListener="#{authentication.login()}"/>
-        </div>
+        <h:commandButton class="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+                         value="Register" actionListener="#{authentication.register()}"/>
     </h:form>
 
-    <div class="mt-4">
-        <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
-    </div>
+    <p:growl id="messages" life="3000" showDetail="true" autoUpdate="true" closable="true" position="bottom-right" />
 </h:body>
 
 </html>
