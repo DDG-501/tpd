@@ -69,6 +69,11 @@ public class UserDAO implements UserDAORemote {
             Validator validator = factory.getValidator();
             Set<ConstraintViolation<User>> violations = validator.validate(user);
 
+            User existingUser = get(user.getId());
+            if (existingUser == null) {
+                throw new IllegalArgumentException("User does not exist in the database");
+            }
+
             if (!violations.isEmpty()) {
                 String violationMessages = violations.stream()
                         .map(violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
@@ -77,12 +82,20 @@ public class UserDAO implements UserDAORemote {
                 throw new IllegalArgumentException(violationMessages);
             }
 
-            entityManager.merge(user);
+            existingUser.setPassword(user.getPassword());
+            existingUser.setUsername(user.getUsername());
+
+            entityManager.merge(existingUser);
         }
     }
 
     public void delete(User user) {
-        entityManager.remove(user);
+        User existingUser = get(user.getId());
+        if (existingUser == null) {
+            throw new IllegalArgumentException("User does not exist in the database");
+        }
+
+        entityManager.remove(existingUser);
     }
 
     @Override

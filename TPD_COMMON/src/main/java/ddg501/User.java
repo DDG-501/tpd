@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users", schema = "public")
@@ -26,9 +26,9 @@ public class User implements Serializable {
     private String password;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-    private Set<UserBook> borrows = new HashSet<>();
+    private List<UserBook> borrows = new ArrayList<>();
 
-    public Set<UserBook> getBorrows() {
+    public List<UserBook> getBorrows() {
         return borrows;
     }
 

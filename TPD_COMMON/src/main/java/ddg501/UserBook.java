@@ -19,11 +19,9 @@ public class UserBook {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "borrow_date")
     private Date borrowDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "return_date")
     private Date returnDate;
 

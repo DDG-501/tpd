@@ -67,6 +67,11 @@ public class BookDAO implements BookDAORemote {
             Validator validator = factory.getValidator();
             Set<ConstraintViolation<Book>> violations = validator.validate(book);
 
+            Book existingBook = get(book.getId());
+            if (existingBook == null) {
+                throw new IllegalArgumentException("Book does not exist in the database");
+            }
+
             if (!violations.isEmpty()) {
                 String violationMessages = violations.stream()
                         .map(violation -> String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()))
@@ -75,12 +80,23 @@ public class BookDAO implements BookDAORemote {
                 throw new IllegalArgumentException(violationMessages);
             }
 
-            entityManager.merge(book);
+            existingBook.setName(book.getName());
+            existingBook.setAuthor(book.getAuthor());
+            existingBook.setDescription(book.getDescription());
+            existingBook.setPublishDate(existingBook.getPublishDate());
+            existingBook.setImageURL(existingBook.getImageURL());
+
+            entityManager.merge(existingBook);
         }
     }
 
     @Override
     public void delete(Book book) {
-        entityManager.remove(book);
+        Book existingBook = get(book.getId());
+        if (existingBook == null) {
+            throw new IllegalArgumentException("Book does not exist in the database");
+        }
+
+        entityManager.remove(existingBook);
     }
 }

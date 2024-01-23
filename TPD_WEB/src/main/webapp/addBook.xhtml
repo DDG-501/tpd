@@ -7,7 +7,7 @@
     <h:head>
         <title>Add New Book</title>
         <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
-        <h:outputScript library="primefaces" name="jquery/jquery.js"/>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
 
         <f:metadata>
             <f:event type="preRenderView" listener="#{loginGuard.checkAccess}" />
@@ -22,9 +22,9 @@
                     <a href="/TPD_WEB/bookstore.xhtml" class="text-white hover:text-gray-300">Boorrow Book</a>
                     <a href="/TPD_WEB/addBook.xhtml" class="text-white hover:text-gray-300">Add Book</a>
                     <a href="/TPD_WEB/profile.xhtml" class="text-white hover:text-gray-300">Profile</a>
-                    <p:commandLink action="#{authentication.logout()}" update="messages">
-                        <div class="text-white hover:text-gray-300">Logout</div>
-                    </p:commandLink>
+                    <h:form id = "logutForm">
+                        <p:commandButton value="Logout" action="#{authentication.logout()}"/>
+                    </h:form>
                 </div>
             </div>
         </nav>
@@ -34,19 +34,19 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="mb-4">
                         <h:outputLabel for="name" value="Book Name:" class="block text-gray-700 font-bold mb-2" />
-                        <h:inputText id="name" value="#{bookBean.book.name}" required="true"
+                        <h:inputText id="name" value="#{bookBean.book.name}"
                                      class="w-full border rounded py-2 px-3" />
                     </div>
 
                     <div class="mb-4">
                         <h:outputLabel for="author" value="Author:" class="block text-gray-700 font-bold mb-2" />
-                        <h:inputText id="author" value="#{bookBean.book.author}" required="true"
+                        <h:inputText id="author" value="#{bookBean.book.author}"
                                      class="w-full border rounded py-2 px-3" />
                     </div>
 
                     <div class="mb-4">
                         <h:outputLabel for="publishDate" value="Publish Date:" class="block text-gray-700 font-bold mb-2" />
-                        <h:inputText id="publishDate" value="#{bookBean.book.publishDate}" required="true"
+                        <h:inputText id="publishDate" value="#{bookBean.book.publishDate}"
                                      class="w-full border rounded py-2 px-3" type="date" pattern="yyyy-MM-dd">
                             <f:convertDateTime pattern="yyyy-MM-dd" />
                         </h:inputText>
