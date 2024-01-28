@@ -23,9 +23,9 @@ services:
     networks:
       - tpdnet
 
+volumes:
+  pg_data:
+
 networks:
   tpdnet:
     driver: bridge
-
-volumes:
-  pg_data:
