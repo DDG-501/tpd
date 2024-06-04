@@ -102,7 +102,7 @@
                         <home>${project.build.directory}/glassfish6x-home</home>
 
                         <properties>
-                            <cargo.hostname>localhost</cargo.hostname>
+                            <cargo.hostname>0.0.0.0</cargo.hostname>
                             <cargo.servlet.port>8080</cargo.servlet.port>
                             <cargo.glassfish.admin.port>4848</cargo.glassfish.admin.port>
                             <cargo.remote.username>admin</cargo.remote.username>
@@ -112,10 +112,10 @@
                         <datasources>
                             <datasource>
                                 <driverClass>org.postgresql.Driver</driverClass>
-                                <url>jdbc:postgresql://localhost:5432/tpdb</url>
+                                <url>jdbc:postgresql://_POSTGRES_CHANGEME_URL_/tpdb</url>
                                 <jndiName>jdbc/PostgresDS</jndiName>
-                                <username>postgres</username>
-                                <password>postgres</password>
+                                <username>_POSTGRES_CHANGEME_USERNAME_</username>
+                                <password>_POSTGRES_CHANGEME_PASSWORD_</password>
                             </datasource>
                         </datasources>
                     </configuration>
