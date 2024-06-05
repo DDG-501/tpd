@@ -62,7 +62,8 @@ public class Authentication implements Serializable {
             UserDAORemote dao = (UserDAORemote) ctx
                     .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
-            User user = new User(username, password);
+            // TODO: CHANGE THIS
+            User user = new User(username, password, "test@email.com");
 
             dao.add(user);
             FacesContext.getCurrentInstance().addMessage(null,

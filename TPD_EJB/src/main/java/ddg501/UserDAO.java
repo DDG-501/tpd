@@ -84,6 +84,7 @@ public class UserDAO implements UserDAORemote {
 
             existingUser.setPassword(user.getPassword());
             existingUser.setUsername(user.getUsername());
+            existingUser.setEmail(user.getEmail());
 
             entityManager.merge(existingUser);
         }

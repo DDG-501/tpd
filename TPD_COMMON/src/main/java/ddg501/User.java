@@ -1,6 +1,7 @@
 package ddg501;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -14,6 +15,11 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Email
+    @Column(unique = true, length = 50)
+    @Size(min = 4, max = 50)
+    private String email;
 
     @NotNull
     @Column(unique = true, length = 50)
@@ -35,15 +41,17 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
+        this.email = email;
     }
 
-    public User(int id, String username, String password) {
+    public User(int id, String username, String password, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.email = email;
     }
 
     public long getId() {
@@ -68,6 +76,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }
