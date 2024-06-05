@@ -54,6 +54,7 @@ public class User implements Serializable {
         this.email = email;
     }
 
+
     public long getId() {
         return id;
     }
