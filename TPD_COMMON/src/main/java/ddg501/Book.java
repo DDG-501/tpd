@@ -69,6 +69,15 @@ public class Book implements Serializable {
         this.imageURL = imageURL;
     }
 
+    public Book(long id, String name, String author, Date publishDate, String description, String imageURL) {
+        this.id = id;
+        this.name = name;
+        this.author = author;
+        this.publishDate = publishDate;
+        this.description = description;
+        this.imageURL = imageURL;
+    }
+
     public Book(String name, String author, Date publishDate) {
         this.name = name;
         this.author = author;

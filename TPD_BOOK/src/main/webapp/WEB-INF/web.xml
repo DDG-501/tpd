@@ -23,5 +23,15 @@
         <url-pattern>/delete_book</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>UpdateBookServlet</servlet-name>
+        <servlet-class>ddg501.UpdateBookServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UpdateBookServlet</servlet-name>
+        <url-pattern>/update_book</url-pattern>
+    </servlet-mapping>
+
 </web-app>
 
