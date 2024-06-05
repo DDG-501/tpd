@@ -59,7 +59,6 @@ public class UpdateBookServlet extends HttpServlet {
                 dao.update(book);
                 response.setContentType("text/plain");
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write("Book updated successfully");
                 objectMapper.writeValue(response.getOutputStream(), book);
 
             } catch (Exception e) {
