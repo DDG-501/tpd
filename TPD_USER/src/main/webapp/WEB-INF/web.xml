@@ -43,5 +43,25 @@
         <url-pattern>/update_user</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>BorrowBookServlet</servlet-name>
+        <servlet-class>ddg501.BorrowBookServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>BorrowBookServlet</servlet-name>
+        <url-pattern>/borrow_book</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReturnBookServelt</servlet-name>
+        <servlet-class>ddg501.ReturnBookServelt</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReturnBookServelt</servlet-name>
+        <url-pattern>/return_book</url-pattern>
+    </servlet-mapping>
+
 </web-app>
 

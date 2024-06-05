@@ -4,6 +4,26 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4.0.xsd">
 
     <servlet>
+        <servlet-name>GetAllBooksServlet</servlet-name>
+        <servlet-class>ddg501.GetAllBooksServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetAllBooksServlet</servlet-name>
+        <url-pattern>/get_books</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetBookServlet</servlet-name>
+        <servlet-class>ddg501.GetBookServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetBookServlet</servlet-name>
+        <url-pattern>/get_book</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>AddBookServlet</servlet-name>
         <servlet-class>ddg501.AddBookServlet</servlet-class>
     </servlet>

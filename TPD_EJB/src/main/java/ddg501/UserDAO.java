@@ -114,7 +114,9 @@ public class UserDAO implements UserDAORemote {
         List<User> resultList = entityManager.createQuery(criteriaQuery).getResultList();
 
         if (!resultList.isEmpty()) {
-            return resultList.get(0);
+            User user = resultList.get(0);
+            entityManager.refresh(user);
+            return user;
         } else {
             return null;
         }
