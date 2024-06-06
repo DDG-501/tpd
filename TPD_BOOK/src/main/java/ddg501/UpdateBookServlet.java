@@ -33,6 +33,14 @@ public class UpdateBookServlet extends HttpServlet {
                 return;
             }
 
+            var _book = dao.get(updateBookRequest.book_id);
+
+            if (_book == null) {
+                response.setContentType("text/plain");
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Book not found");
+                return;
+            }
+
             Book book = new Book(updateBookRequest.book_id, updateBookRequest.name, updateBookRequest.author,
                     updateBookRequest.publishDate,
                     updateBookRequest.description, updateBookRequest.imageURL);

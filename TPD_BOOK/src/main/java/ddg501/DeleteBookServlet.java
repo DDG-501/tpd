@@ -33,7 +33,15 @@ public class DeleteBookServlet extends HttpServlet {
             }
 
             try {
-                dao.delete(dao.get(deleteBookRequest.book_id));
+                var book = dao.get(deleteBookRequest.book_id);
+
+                if (book == null) {
+                    response.setContentType("text/plain");
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Book not found");
+                    return;
+                }
+
+                dao.delete(book);
                 response.setContentType("text/plain");
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write("Book deleted successfully");
