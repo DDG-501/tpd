@@ -21,7 +21,7 @@ public class ReturnBookServlet extends HttpServlet {
         try {
             InitialContext ctx = new InitialContext();
             UserDAORemote userDao = (UserDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+                    .lookup("java:global/TPD_EAR_USER/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
             ReturnBookRequest returnBookRequest = objectMapper.readValue(request.getInputStream(),
                     ReturnBookRequest.class);

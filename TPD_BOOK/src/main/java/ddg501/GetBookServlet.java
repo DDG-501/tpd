@@ -18,10 +18,10 @@ public class GetBookServlet extends HttpServlet {
         try {
             InitialContext ctx = new InitialContext();
             BookDAORemote dao = (BookDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/BookDAO!ddg501.BookDAO");
+                    .lookup("java:global/TPD_EAR_BOOK/ddg501-TPD_EJB-1.0-SNAPSHOT/BookDAO!ddg501.BookDAO");
 
             UserDAORemote daoUser = (UserDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+                    .lookup("java:global/TPD_EAR_BOOK/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
             GetBookRequest getBookRequest = objectMapper.readValue(request.getInputStream(),
                     GetBookRequest.class);

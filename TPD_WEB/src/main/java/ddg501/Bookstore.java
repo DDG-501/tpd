@@ -66,7 +66,7 @@ public class Bookstore implements Serializable {
 
             RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url("http://" + authentication.getBookEndpoint() + "/TPD_USER/borrow_book")
+                    .url("http://" + authentication.getUserEndpoint() + "/TPD_USER/borrow_book")
                     .post(body)
                     .build();
 

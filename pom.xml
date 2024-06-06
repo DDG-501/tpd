@@ -12,7 +12,9 @@
         <module>TPD_EJB</module>
         <module>TPD_WEB</module>
         <module>TPD_COMMON</module>
-        <module>TPD_EAR</module>
+        <module>TPD_EAR_BOOK</module>
+        <module>TPD_EAR_USER</module>
+        <module>TPD_EAR_WEB</module>
         <module>TPD_USER</module>
         <module>TPD_BOOK</module>
     </modules>

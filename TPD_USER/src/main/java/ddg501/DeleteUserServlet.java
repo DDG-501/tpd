@@ -21,7 +21,7 @@ public class DeleteUserServlet extends HttpServlet {
         try {
             InitialContext ctx = new InitialContext();
             UserDAORemote dao = (UserDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+                    .lookup("java:global/TPD_EAR_USER/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
             DeleteUserRequest deleteUserRequest = objectMapper.readValue(request.getInputStream(),
                     DeleteUserRequest.class);

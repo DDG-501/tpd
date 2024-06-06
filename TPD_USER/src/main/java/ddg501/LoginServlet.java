@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet {
         try {
             InitialContext ctx = new InitialContext();
             UserDAORemote dao = (UserDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+                    .lookup("java:global/TPD_EAR_USER/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
             LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
             User user = dao.login(loginRequest.user, loginRequest.password);

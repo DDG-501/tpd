@@ -34,7 +34,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <ui:repeat var="book" value="#{bookstore.books}">
                 <div class="relative overflow-hidden">
-                    <div class="bg-cover bg-center w-64 h-96 rounded-md group" style="background-image: url('#{book.imageURL}')">
+                    <div class="bg-cover bg-center bg-red-500 w-64 h-96 rounded-md group" style="background-image: url('#{book.imageURL}')">
                         <div class="w-64 h-96 absolute bottom-0 left-0 transform translate-y-full transition-transform ease-in-out duration-300 bg-white group-hover:translate-y-0 flex flex-col justify-center items-center">
                             <h2 class="text-center text-xl font-bold mb-2">#{book.name}</h2>
                             <p class="text-center text-gray-600 mb-2">Author: #{book.author}</p>

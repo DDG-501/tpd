@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>TPD_EAR</artifactId>
+    <artifactId>TPD_EAR_USER</artifactId>
     <packaging>ear</packaging>
 
     <properties>
@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>ddg501</groupId>
-            <artifactId>TPD_WEB</artifactId>
+            <artifactId>TPD_USER</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>war</type>
         </dependency>
@@ -31,20 +31,6 @@
             <artifactId>TPD_EJB</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>ejb</type>
-        </dependency>
-
-        <dependency>
-            <groupId>ddg501</groupId>
-            <artifactId>TPD_USER</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>war</type>
-        </dependency>
-
-        <dependency>
-            <groupId>ddg501</groupId>
-            <artifactId>TPD_BOOK</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>war</type>
         </dependency>
 
         <dependency>
@@ -64,11 +50,6 @@
 
                 <configuration>
                     <modules>
-                        <webModule>
-                            <groupId>ddg501</groupId>
-                            <artifactId>TPD_WEB</artifactId>
-                        </webModule>
-
                         <webModule>
                             <groupId>ddg501</groupId>
                             <artifactId>TPD_USER</artifactId>
@@ -119,10 +100,10 @@
                         <datasources>
                             <datasource>
                                 <driverClass>org.postgresql.Driver</driverClass>
-                                <url>jdbc:postgresql://localhost:5432/tpdb</url>
+                                <url>jdbc:postgresql://_POSTGRES_CHANGEME_URL_/tpdb</url>
                                 <jndiName>jdbc/PostgresDS</jndiName>
-                                <username>postgres</username>
-                                <password>postgres</password>
+                                <username>_POSTGRES_CHANGEME_USERNAME_</username>
+                                <password>_POSTGRES_CHANGEME_PASSWORD_</password>
                             </datasource>
                         </datasources>
                     </configuration>
@@ -130,7 +111,7 @@
                     <deployables>
                         <deployable>
                             <groupId>ddg501</groupId>
-                            <artifactId>TPD_EAR</artifactId>
+                            <artifactId>TPD_EAR_USER</artifactId>
                             <type>ear</type>
                         </deployable>
                     </deployables>

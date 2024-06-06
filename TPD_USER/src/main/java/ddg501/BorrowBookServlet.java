@@ -21,10 +21,10 @@ public class BorrowBookServlet extends HttpServlet {
         try {
             InitialContext ctx = new InitialContext();
             UserDAORemote userDao = (UserDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+                    .lookup("java:global/TPD_EAR_USER/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
             BookDAORemote bookDao = (BookDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/BookDAO!ddg501.BookDAO");
+                    .lookup("java:global/TPD_EAR_USER/ddg501-TPD_EJB-1.0-SNAPSHOT/BookDAO!ddg501.BookDAO");
 
             BorrowBookRequest borrowBookRequest = objectMapper.readValue(request.getInputStream(),
                     BorrowBookRequest.class);
