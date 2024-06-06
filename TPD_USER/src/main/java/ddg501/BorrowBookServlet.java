@@ -9,14 +9,9 @@ import javax.naming.InitialContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
+import ddg501.requests.BorrowBookRequest;
 
-class BorrowBookRequest {
-    public int user_id;
-    public int book_id;
-    public String username;
-    public String password;
-}
+import java.io.IOException;
 
 public class BorrowBookServlet extends HttpServlet {
     private static final ObjectMapper objectMapper = new ObjectMapper();

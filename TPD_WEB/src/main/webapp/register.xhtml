@@ -8,7 +8,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-    <title>Authenticate</title>
+    <title>Register</title>
     <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
     <h:outputScript library="primefaces" name="jquery/jquery.js"/>
 </h:head>
@@ -24,6 +24,13 @@
         </div>
 
         <div class="mb-6">
+            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+            <h:inputText id="email"
+                         class="shadow appearance-none border rounded w-full p-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                         value="#{authentication.email}"/>
+        </div>
+
+        <div class="mb-6">
             <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
             <h:inputText id="password"
                          type="password"
@@ -32,10 +39,7 @@
         </div>
 
         <h:commandButton class="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-                         value="Login" actionListener="#{authentication.login()}"/>
-
-        <h:commandButton class="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-                         value="Register" actionListener="#{authentication.moveToRegister()}"/>
+                         value="Register" actionListener="#{authentication.register()}"/>
     </h:form>
 
     <p:growl id="messages" life="3000" showDetail="true" autoUpdate="true" closable="true" position="bottom-right" />

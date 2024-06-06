@@ -10,12 +10,7 @@ import javax.naming.InitialContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-
-class AddUserRequest {
-    public String username;
-    public String password;
-    public String email;
-}
+import ddg501.requests.AddUserRequest;
 
 public class AddUserServlet extends HttpServlet {
     private static final ObjectMapper objectMapper = new ObjectMapper();

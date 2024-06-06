@@ -9,13 +9,9 @@ import javax.naming.InitialContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
+import ddg501.requests.DeleteUserRequest;
 
-class DeleteUserRequest {
-    public int id;
-    public String username;
-    public String password;
-}
+import java.io.IOException;
 
 public class DeleteUserServlet extends HttpServlet {
     private static final ObjectMapper objectMapper = new ObjectMapper();

@@ -1,18 +1,14 @@
 package ddg501;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
+
+import ddg501.requests.GetAllBooksRequest;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import javax.naming.InitialContext;
 import java.io.IOException;
-
-class GetBooksRequest {
-    public String username;
-    public String password;
-}
 
 public class GetAllBooksServlet extends HttpServlet {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -27,8 +23,8 @@ public class GetAllBooksServlet extends HttpServlet {
             UserDAORemote daoUser = (UserDAORemote) ctx
                     .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
 
-            GetBooksRequest getBooksRequest = objectMapper.readValue(request.getInputStream(),
-                    GetBooksRequest.class);
+            GetAllBooksRequest getBooksRequest = objectMapper.readValue(request.getInputStream(),
+                    GetAllBooksRequest.class);
 
             if (daoUser.login(getBooksRequest.username, getBooksRequest.password) == null) {
                 response.setContentType("text/plain");

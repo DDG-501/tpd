@@ -1,6 +1,8 @@
 package ddg501;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ddg501.requests.AddBookRequest;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,24 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import javax.naming.InitialContext;
 import java.io.IOException;
-import java.util.Date;
-
-class AddBookRequest {
-    public String username;
-
-    public String password;
-
-    public String name;
-
-    public String author;
-
-    public Date publishDate;
-
-    public String description;
-
-    public String imageURL;
-
-}
 
 public class AddBookServlet extends HttpServlet {
     private static final ObjectMapper objectMapper = new ObjectMapper();

@@ -9,13 +9,9 @@ import javax.naming.InitialContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
+import ddg501.requests.ReturnBookRequest;
 
-class ReturnBookRequest {
-    public int bookborrow_id;
-    public String username;
-    public String password;
-}
+import java.io.IOException;
 
 public class ReturnBookServlet extends HttpServlet {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -60,7 +56,7 @@ public class ReturnBookServlet extends HttpServlet {
                 userDao.returnBook(bookBorrow);
                 response.setContentType("text/plain");
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write("Book borrowed successfully");
+                response.getWriter().write("Book returned successfully");
 
             } catch (Exception e) {
                 response.setContentType("text/plain");

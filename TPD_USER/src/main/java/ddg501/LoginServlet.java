@@ -9,12 +9,9 @@ import javax.naming.InitialContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
+import ddg501.requests.LoginRequest;
 
-class LoginRequest {
-    public String user;
-    public String password;
-}
+import java.io.IOException;
 
 public class LoginServlet extends HttpServlet {
     private static final ObjectMapper objectMapper = new ObjectMapper();

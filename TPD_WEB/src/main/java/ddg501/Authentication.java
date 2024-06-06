@@ -5,16 +5,87 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.application.NavigationHandler;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
-import javax.naming.InitialContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ddg501.requests.AddUserRequest;
+import ddg501.requests.LoginRequest;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Properties;
 
 @SessionScoped
 @Named
 public class Authentication implements Serializable {
     private String username;
     private String password;
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     private User user;
+    private final String userEndpoint = getUserEndpointFromConfig();
+    private final String bookEndpoint = getBookEndpointFromConfig();
+
+    public String getBookEndpoint() {
+        return bookEndpoint;
+    }
+
+    public String getUserEndpoint() {
+        return userEndpoint;
+    }
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final OkHttpClient client = new OkHttpClient();
+
+    private String getUserEndpointFromConfig() {
+        Properties properties = new Properties();
+        try (InputStream input = Authentication.class.getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                return "";
+            }
+
+            properties.load(input);
+            String endpoint = properties.getProperty("user_endpoint");
+            return endpoint;
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return "";
+    }
+
+    private String getBookEndpointFromConfig() {
+        Properties properties = new Properties();
+        try (InputStream input = Authentication.class.getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                return "";
+            }
+
+            properties.load(input);
+            String endpoint = properties.getProperty("book_endpoint");
+            return endpoint;
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return "";
+    }
 
     public User getUser() {
         return user;
@@ -38,16 +109,22 @@ public class Authentication implements Serializable {
 
     public void refreshUser() {
         try {
-            InitialContext ctx = new InitialContext();
+            LoginRequest loginRequest = new LoginRequest(user.getUsername(), user.getPassword());
+            String json = objectMapper.writeValueAsString(loginRequest);
 
-            UserDAORemote dao = (UserDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+            RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url("http://" + userEndpoint + "/TPD_USER/login")
+                    .post(body)
+                    .build();
 
-            this.user = dao.get(user.getId());
-
-            if (user == null) {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Can't refresh user"));
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    user = objectMapper.readValue(response.body().string(), User.class);
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Can't refresh user"));
+                }
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
@@ -57,17 +134,30 @@ public class Authentication implements Serializable {
 
     public void register() {
         try {
-            InitialContext ctx = new InitialContext();
+            AddUserRequest registerRequest = new AddUserRequest(getUsername(), getPassword(), getEmail());
+            String json = objectMapper.writeValueAsString(registerRequest);
 
-            UserDAORemote dao = (UserDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+            RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url("http://" + userEndpoint + "/TPD_USER/register")
+                    .post(body)
+                    .build();
 
-            // TODO: CHANGE THIS
-            User user = new User(username, password, "test@email.com");
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User added successfully!"));
+                    FacesContext facesContext = FacesContext.getCurrentInstance();
+                    NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
+                    navigationHandler.handleNavigation(facesContext, null, "index.xhtml?faces-redirect=true");
 
-            dao.add(user);
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User added successfully!"));
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                                    "Couldn't register user: " + response.body().string()));
+                }
+            }
+
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
                     "Couldn't register user: " + e.getMessage()));
@@ -76,29 +166,44 @@ public class Authentication implements Serializable {
 
     public void login() {
         try {
-            InitialContext ctx = new InitialContext();
+            LoginRequest loginRequest = new LoginRequest(getUsername(), getPassword());
+            String json = objectMapper.writeValueAsString(loginRequest);
 
-            UserDAORemote dao = (UserDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/UserDAO!ddg501.UserDAO");
+            RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url("http://" + userEndpoint + "/TPD_USER/login")
+                    .post(body)
+                    .build();
 
-            user = dao.login(username, password);
-            username = "";
-            password = "";
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    username = "";
+                    password = "";
+                    email = "";
 
-            if (user != null) {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User logged in!"));
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
-                navigationHandler.handleNavigation(facesContext, null, "bookstore.xhtml?faces-redirect=true");
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Incorrect credentials"));
+                    user = objectMapper.readValue(response.body().string(), User.class);
+
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User logged in!"));
+                    FacesContext facesContext = FacesContext.getCurrentInstance();
+                    NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
+                    navigationHandler.handleNavigation(facesContext, null, "bookstore.xhtml?faces-redirect=true");
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Incorrect credentials"));
+                }
+
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
                     "Couldn't register user: " + e.getMessage()));
         }
+    }
+
+    public void moveToRegister() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
+        navigationHandler.handleNavigation(facesContext, null, "register.xhtml?faces-redirect=true");
     }
 
     public void logout() {

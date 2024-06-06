@@ -3,15 +3,25 @@ package ddg501;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import java.io.Serializable;
 
-import javax.naming.InitialContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ddg501.requests.AddBookRequest;
 
 @Named
 @RequestScoped
 public class BookBean implements Serializable {
+    @Inject
+    private Authentication authentication;
 
     private Book book;
 
@@ -27,16 +37,33 @@ public class BookBean implements Serializable {
         this.book = book;
     }
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final OkHttpClient client = new OkHttpClient();
+
     public void addBook() {
         try {
-            InitialContext ctx = new InitialContext();
 
-            BookDAORemote dao = (BookDAORemote) ctx
-                    .lookup("java:global/TPD_EAR/ddg501-TPD_EJB-1.0-SNAPSHOT/BookDAO!ddg501.BookDAO");
+            AddBookRequest addBookRequest = new AddBookRequest(authentication.getUser().getUsername(),
+                    authentication.getUser().getPassword(), book.getName(), book.getAuthor(), book.getPublishDate(),
+                    book.getDescription(), book.getImageURL());
+            String json = objectMapper.writeValueAsString(addBookRequest);
 
-            dao.add(book);
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Book added successfully!"));
+            RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url("http://" + authentication.getBookEndpoint() + "/TPD_BOOK/add_book")
+                    .post(body)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Book added successfully!"));
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                                    "Couldn't register user: " + response.body().string()));
+                }
+            }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
                     "Couldn't add book: " + e.getMessage()));

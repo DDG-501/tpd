@@ -9,16 +9,9 @@ import javax.naming.InitialContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
+import ddg501.requests.UpdateUserRequest;
 
-class UpdateUserRequest {
-    public int id;
-    public String email;
-    public String username;
-    public String password;
-    public String old_username;
-    public String old_password;
-}
+import java.io.IOException;
 
 public class UpdateUserServlet extends HttpServlet {
     private static final ObjectMapper objectMapper = new ObjectMapper();
