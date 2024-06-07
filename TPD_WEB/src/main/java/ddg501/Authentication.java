@@ -16,10 +16,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ddg501.requests.AddUserRequest;
 import ddg501.requests.LoginRequest;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Properties;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 @SessionScoped
 @Named
@@ -37,8 +48,8 @@ public class Authentication implements Serializable {
     }
 
     private User user;
-    private final String userEndpoint = getUserEndpointFromConfig();
-    private final String bookEndpoint = getBookEndpointFromConfig();
+    private final String userEndpoint = getFromConfig("user_endpoint");
+    private final String bookEndpoint = getFromConfig("book_endpoint");
 
     public String getBookEndpoint() {
         return bookEndpoint;
@@ -49,27 +60,45 @@ public class Authentication implements Serializable {
     }
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = getHttpClient();
 
-    private String getUserEndpointFromConfig() {
-        Properties properties = new Properties();
-        try (InputStream input = Authentication.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (input == null) {
-                return "";
-            }
+    public static OkHttpClient getHttpClient() {
+        try {
 
-            properties.load(input);
-            String endpoint = properties.getProperty("user_endpoint");
-            return endpoint;
+            FileInputStream fis = new FileInputStream(getFromConfig("certificate_path"));
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            X509Certificate caCert = (X509Certificate) cf.generateCertificate(fis);
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(null, null);
+            keyStore.setCertificateEntry("caCert", caCert);
+
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init(keyStore);
+            TrustManager[] trustManagers = tmf.getTrustManagers();
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustManagers, new java.security.SecureRandom());
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustManagers[0])
+                    .hostnameVerifier(new HostnameVerifier() {
+                        @Override
+                        public boolean verify(String hostname, SSLSession session) {
+                            return true;
+                        }
+                    })
+                    .build();
+
+            return client;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return "";
+        return null;
     }
 
-    private String getBookEndpointFromConfig() {
+    private static String getFromConfig(String setting) {
         Properties properties = new Properties();
         try (InputStream input = Authentication.class.getClassLoader().getResourceAsStream("config.properties")) {
             if (input == null) {
@@ -77,7 +106,7 @@ public class Authentication implements Serializable {
             }
 
             properties.load(input);
-            String endpoint = properties.getProperty("book_endpoint");
+            String endpoint = properties.getProperty(setting);
             return endpoint;
 
         } catch (IOException ex) {
@@ -114,7 +143,7 @@ public class Authentication implements Serializable {
 
             RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url("http://" + userEndpoint + "/TPD_USER/login")
+                    .url(userEndpoint + "/TPD_USER/login")
                     .post(body)
                     .build();
 
@@ -139,7 +168,7 @@ public class Authentication implements Serializable {
 
             RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url("http://" + userEndpoint + "/TPD_USER/register")
+                    .url(userEndpoint + "/TPD_USER/register")
                     .post(body)
                     .build();
 
@@ -171,7 +200,7 @@ public class Authentication implements Serializable {
 
             RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url("http://" + userEndpoint + "/TPD_USER/login")
+                    .url(userEndpoint + "/TPD_USER/login")
                     .post(body)
                     .build();
 

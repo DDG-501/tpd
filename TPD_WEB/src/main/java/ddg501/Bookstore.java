@@ -30,7 +30,7 @@ public class Bookstore implements Serializable {
     private Authentication authentication;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = Authentication.getHttpClient();
 
     public List<Book> getBooks() {
         try {
@@ -40,7 +40,7 @@ public class Bookstore implements Serializable {
 
             RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url("http://" + authentication.getBookEndpoint() + "/TPD_BOOK/get_books")
+                    .url(authentication.getBookEndpoint() + "/TPD_BOOK/get_books")
                     .post(body)
                     .build();
 
@@ -66,7 +66,7 @@ public class Bookstore implements Serializable {
 
             RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url("http://" + authentication.getUserEndpoint() + "/TPD_USER/borrow_book")
+                    .url(authentication.getUserEndpoint() + "/TPD_USER/borrow_book")
                     .post(body)
                     .build();
 
@@ -94,7 +94,7 @@ public class Bookstore implements Serializable {
 
             RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url("http://" + authentication.getUserEndpoint() + "/TPD_USER/return_book")
+                    .url(authentication.getUserEndpoint() + "/TPD_USER/return_book")
                     .post(body)
                     .build();
 

@@ -38,7 +38,7 @@ public class BookBean implements Serializable {
     }
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = Authentication.getHttpClient();
 
     public void addBook() {
         try {
@@ -50,7 +50,7 @@ public class BookBean implements Serializable {
 
             RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url("http://" + authentication.getBookEndpoint() + "/TPD_BOOK/add_book")
+                    .url(authentication.getBookEndpoint() + "/TPD_BOOK/add_book")
                     .post(body)
                     .build();
 
